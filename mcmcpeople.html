@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Uncertainty</title>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"></script>
+    <script src="https://unpkg.com/d3-simple-slider"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+    <style>
+        *{
+            box-sizing: border-box;
+            font-family: sans-serif;
+        }
+        html, body{
+            width:100%;
+            height:100%;
+            margin:0;
+        }
+        #chart1, #chart2{
+            width:400px;
+            height:400px;
+            float: left;
+        }
+
+
+        #slider{
+            width:400px;
+            height:200px;
+        }
+
+        .uncertainty{
+            fill:"teal";
+            fill-opacity: 0.3;
+        }
+        /*.line{*/
+        /*fill:none;*/
+        /*stroke:"black";*/
+        /*}*/
+        .line {
+            fill: none;
+            stroke: #ffab00;
+            stroke-width: 5;
+            pointer-events: none;
+        }
+
+        .overlay {
+            fill: none;
+            pointer-events: all;
+        }
+
+        /* Style the dots by assigning a fill and stroke */
+        .dot {
+            fill: #ffab00;
+            stroke: #fff;
+        }
+
+        .focus circle {
+            fill: none;
+            stroke: steelblue;
+        }
+
+        .instructions p{
+            text-align: center;
+            font-size:x-large;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h4>which one line best represents the relationship between x and y? m for right chart, c for left chart</h4>
+    <div class="row">
+        <div class="col" >
+            <div id="chart1" style="margin: 0 auto"></div>
+        </div>
+        <div class="col" >
+            <div id="chart2" style="margin: 0 auto"></div>
+        </div>
+    </div>
+
+
+</div>
+
+
+
+<script src="linechart.js"></script>
+
+<script>
+
+
+
+    var uniform = d3.randomUniform(-1,1);
+    var slope1 = uniform();
+    var slope2 = uniform();
+    var slopes = [slope1,slope2];
+    var variables = ["Height","Hair Color"];
+    console.log(slopes);
+    LineChart("chart1",slopes[0],variables);
+    LineChart("chart2",slopes[1],variables);
+
+    var choices = [];
+    document.addEventListener("keypress",function(event){
+        var keyCode = event.keyCode;
+        keyCode = String.fromCharCode(keyCode);
+        var choice;
+        if (keyCode==="m"){
+            choice = slopes[1];
+            choices.push(choice);
+            slopes = [d3.randomNormal(choice,0.2)(),choice];
+            if (uniform()<0){
+                slopes = [slopes[1],slopes[0]]
+            }
+
+            LineChart("chart2",slopes[0],variables);
+            LineChart("chart1",slopes[1],variables);
+            d3.select("#M")
+                .transition()
+                .attr("fill","red")
+                .duration(500)
+                .transition()
+                .attr("fill","black")
+                .duration(500);
+
+        } else if (keyCode==="c"){
+            choice = slopes[0];
+            choices.push(choice);
+            slopes = [choice,d3.randomNormal(choice,0.2)()];
+            if (uniform()<0){
+                slopes = [slopes[1],slopes[0]]
+            }
+
+            LineChart("chart2",slopes[0],variables);
+            LineChart("chart1",slopes[1],variables);
+            d3.select("#C")
+                .transition()
+                .attr("fill","red")
+                .duration(500)
+                .transition()
+                .attr("fill","black")
+                .duration(500);
+        }
+
+
+
+        if (choices.length === 100){
+            console.log(choices);
+            alert("done");
+
+        }
+    });
+
+</script>
+</body>
+</html>
