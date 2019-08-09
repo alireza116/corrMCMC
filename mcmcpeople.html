@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <title>Uncertainty</title>
     <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script
+            src="https://code.jquery.com/jquery-3.4.1.js"
+            integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+            crossorigin="anonymous"></script>s
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"></script>
     <script src="https://unpkg.com/d3-simple-slider"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
@@ -71,7 +75,7 @@
 </head>
 <body>
 <div class="container">
-    <h4>which one line best represents the relationship between x and y? m for right chart, c for left chart</h4>
+    <h4>which one line best represents the relationship between <span id="varX"></span> and <span id="varY"></span>? hit M for the right chart and C the for left chart on the keyboard.</h4>
     <div class="row">
         <div class="col" >
             <div id="chart1" style="margin: 0 auto"></div>
@@ -97,6 +101,8 @@
     var slope2 = uniform();
     var slopes = [slope1,slope2];
     var variables = ["Height","Hair Color"];
+    $("#varX").text(variables[0]);
+    $("#varY").text(variables[1]);
     console.log(slopes);
     LineChart("chart1",slopes[0],variables);
     LineChart("chart2",slopes[1],variables);
