@@ -110,12 +110,14 @@
             choice = slopes[1];
             choices.push(choice);
             slopes = [d3.randomNormal(choice,0.2)(),choice];
+            console.log(slopes);
             if (uniform()<0){
                 slopes = [slopes[1],slopes[0]]
             }
+            console.log(slopes);
 
-            LineChart("chart2",slopes[0],variables);
-            LineChart("chart1",slopes[1],variables);
+            LineChart("chart2",slopes[1],variables);
+            LineChart("chart1",slopes[0],variables);
             d3.select("#M")
                 .transition()
                 .attr("fill","red")
@@ -128,12 +130,13 @@
             choice = slopes[0];
             choices.push(choice);
             slopes = [choice,d3.randomNormal(choice,0.2)()];
+            console.log(slopes);
             if (uniform()<0){
                 slopes = [slopes[1],slopes[0]]
             }
-
-            LineChart("chart2",slopes[0],variables);
-            LineChart("chart1",slopes[1],variables);
+            console.log(slopes);
+            LineChart("chart2",slopes[1],variables);
+            LineChart("chart1",slopes[0],variables);
             d3.select("#C")
                 .transition()
                 .attr("fill","red")
