@@ -1,11 +1,16 @@
-function LineChart(chartID,corr,variables){
-    d3.select("#"+chartID).select("svg").remove();
+function LineChartMC(chartID,variables){
+    var line;
     var cwidth = document.querySelector("#"+chartID).clientWidth;
     var cheight = document.querySelector("#"+chartID).clientHeight;
+    var cwidth = $("#"+chartID).width();
+    var cheight = $("#"+chartID).height();
+    cwidth = cheight;
+    console.log(cwidth);
+    console.log(cheight);
     var margin = {top: 70, right: 70, bottom: 70, left: 70}
         , width = cwidth - margin.left - margin.right // Use the window's width
         , height = cheight - margin.top - margin.bottom; // Use the window's height
-
+    var slopeScale = d3.scaleLinear().domain([1,-1]).range([45,-45]);
 
 // 5. X scale will use the index of our data
     var xScale = d3.scaleLinear()
@@ -53,7 +58,7 @@ function LineChart(chartID,corr,variables){
 
 
 // 3. Call the x axis in a group tag
-    svg.append("g")
+    var xAxis = svg.append("g")
         .attr("class", "x axis")
         .attr("transform", "translate(0," + height /2+ ")")
         .call(d3.axisBottom(xScale).ticks([])); // Create an axis component with d3.axisBottom
@@ -61,7 +66,7 @@ function LineChart(chartID,corr,variables){
 
 
 // 4. Call the y axis in a group tag
-    svg.append("g")
+    var yAxis = svg.append("g")
         .attr("class", "y axis").attr("transform","translate("+width/2+",0)")
         .call(d3.axisLeft(yScale).ticks([])); // Create an axis component with d3.axisLeft
 // 9. Append the path, bind the data, and call the line generator
@@ -73,43 +78,6 @@ function LineChart(chartID,corr,variables){
         .attr("height", height+margin.top)
         .attr("transform","translate("+-margin.left+","+-margin.top+")"); // position the y-centre
 
-    var line;
-
-
-    var uncertainty = svg .append("path").attr("class","uncertainty") .attr("clip-path", "url(#rect-clip)");
-
-    // var pos = {x:0,y:0};
-
-    var slopeScale = d3.scaleLinear().domain([1,-1]).range([45,135]);
-    console.log(slopeScale(-1));
-    var posDegree = slopeScale(corr);
-    console.log("degree");
-    console.log(corr);
-    console.log(posDegree);
-    var pos1Radians = posDegree * Math.PI / 180;
-    var pos2Radians = (posDegree + 180) * Math.PI / 180;
-    var posy= Math.sin(pos1Radians) /2;
-    var posx = Math.cos(pos1Radians) /2;
-
-    var posy1 = Math.sin(pos2Radians)/2;
-    var posx1 = Math.cos(pos2Radians)/2;
-
-    var pos = {x:posx,y:posy};
-    var pos1 = {x:posx1,y:posy1};
-//                console.log(focusPoint);
-    dataset.push(pos);
-    dataset.push(pos1);
-    console.log(dataset);
-    var lineG = svg.append("g").attr("class","lineContainer");
-    // lineG.attr("clip-path","url(#rect-clip)");
-//                console.log(focusNumber);
-    line = lineG.append("path")
-        .data([dataset]) // 10. Binds data to the line
-        .attr("class", "line") // Assign a class for styling
-        .attr("d", valueLine)
-        ; // 11. Calls the line generator
-
-    line.attr("transform","translate("+width/2+","+ (-height/2)+")")
 
 
     svg.append("text").attr("id","x label")
@@ -123,6 +91,66 @@ function LineChart(chartID,corr,variables){
         .attr("x",width/2 )
         .attr("y",-10)
         .text(variables[1]);
+
+    // var pos = {x:0,y:0};
+this.createChart = function(corr){
+
+    var posDegree = slopeScale(corr);
+    var pos1Radians = posDegree * Math.PI / 180;
+    var pos2Radians = (posDegree + 180) * Math.PI / 180;
+    var posy= Math.sin(pos1Radians) /2;
+    var posx = Math.cos(pos1Radians) /2;
+    var posy1 = Math.sin(pos2Radians)/2;
+    var posx1 = Math.cos(pos2Radians)/2;
+    var pos = {x:posx,y:posy};
+    var pos1 = {x:posx1,y:posy1};
+//                console.log(focusPoint);
+    dataset.push(pos);
+    dataset.push(pos1);
+    console.log(dataset);
+    var lineG = svg.append("g").attr("class","lineContainer");
+    // lineG.attr("clip-path","url(#rect-clip)");
+//                console.log(focusNumber);
+    line = lineG.append("path")
+        .data([dataset]) // 10. Binds data to the line
+        .attr("class", "line") // Assign a class for styling
+        .attr("d", valueLine)
+        .attr("fill","none")
+        .attr("stroke","#ffab00")
+        .attr("stroke-width",5);
+
+    // fill: none;
+    // stroke: #ffab00;
+    // stroke-width: 5;
+    // pointer-events: none;
+    // ; // 11. Calls the line generator
+
+    line.attr("transform","translate("+width/2+","+ (-height/2)+")")
+};
+
+this.updateChart = function(corr){
+    dataset = [];
+    var posDegree = slopeScale(corr);
+    var pos1Radians = posDegree * Math.PI / 180;
+    var pos2Radians = (posDegree + 180) * Math.PI / 180;
+    var posy= Math.sin(pos1Radians) /2;
+    var posx = Math.cos(pos1Radians) /2;
+    var posy1 = Math.sin(pos2Radians)/2;
+    var posx1 = Math.cos(pos2Radians)/2;
+    var pos = {x:posx,y:posy};
+    var pos1 = {x:posx1,y:posy1};
+    dataset.push(pos);
+    dataset.push(pos1);
+    line.data([dataset]).transition().attr("d",valueLine);
+
+};
+
+this.highlightLine = function(){
+    var oldStroke = xAxis.attr("stroke-width");
+    xAxis.select("path").transition().attr("stroke-width",5).duration(500).transition().attr("stroke-width",oldStroke).duration(500);
+    yAxis.select("path").transition().attr("stroke-width",5).duration(500).transition().attr("stroke-width",oldStroke).duration(500);
+
+}
 
 
 }

@@ -33,7 +33,7 @@
         /*}*/
         .line {
             fill: none;
-            stroke: #ffab00;
+            stroke: orange;
             stroke-width: 5;
             pointer-events: none;
         }
@@ -290,43 +290,6 @@
         return points
     }
 
-//    var mutationData = new WeakMap();
-//
-//    var targetNode = document.getElementById('chart');
-//
-//    // Options for the observer (which mutations to observe)
-//    var config = { attributes: true, childList: true, subtree: true , attributeOldValue:true};
-//
-//    // Callback function to execute when mutations are observed
-//    var callback = function(mutationsList, observer) {
-//        for(var mutation of mutationsList) {
-////            if (mutation.type == 'childList') {
-////                console.log('A child node has been added or removed.');
-////            }
-////            else if (mutation.type == 'attributes') {
-////                console.log('The ' + mutation.attributeName + ' attribute was modified.');
-////            }
-//            var target = mutation.target;
-//            if (mutationData.has(target)){
-//               var  mutationTarget = mutationData.get(mutation.target);
-//               mutationTarget.push({type:mutation.type,attributeName:mutation.attributeName,oldValue:mutation.oldValue,time:Date.now()})
-//            } else{
-//                mutationData.set(target,[]);
-//                var  mutationTarget = mutationData.get(mutation.target);
-//                mutationTarget.push({type:mutation.type,attributeName:mutation.attributeName,oldValue:mutation.oldValue,time:Date.now()})
-//            }
-//        }
-//        console.log(mutationData);
-//    };
-//
-//    // Create an observer instance linked to the callback function
-//    var observer = new MutationObserver(callback);
-//
-//    // Start observing the target node for configured mutations
-//    observer.observe(targetNode, config);
-
-    // Later, you can stop observing
-//    observer.disconnect();
 
 
 
